@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wdu4.invoicing.mapper.SupplierMapper" >
+
+    <select id="listSupplier" resultType="Supplier">
+      SELECT * FROM supplier
+      <where>
+          <if test="supplier.supplierId != null">
+              supplierId LIKE CONCAT('%',#{supplier.supplierId},'%')
+          </if>
+          <if test="supplier.supplierName != null and supplier.supplierName != ''">
+              AND supplierName LIKE "%"#{supplier.supplierName}"%"
+          </if>
+          <if test="supplier.supplierPhone != null and supplier.supplierPhone != ''">
+              AND supplierPhone LIKE "%"#{supplier.supplierPhone}"%"
+          </if>
+          <if test="supplier.supplierAddress != null and supplier.supplierAddress != ''">
+              AND supplierAddress LIKE "%"#{supplier.supplierAddress}"%"
+          </if>
+      </where>
+      LIMIT #{limit.offset}, #{limit.limit}
+    </select>
+
+    <select id="countSupplier" parameterType="Supplier" resultType="Integer">
+        SELECT COUNT(supplierId) FROM supplier
+        <where>
+            <if test="supplierId != null">
+                supplierId LIKE CONCAT('%',#{supplierId},'%')
+            </if>
+            <if test="supplierName != null and supplierName != ''">
+                AND supplierName LIKE "%"#{supplierName}"%"
+            </if>
+            <if test="supplierPhone != null and supplierPhone != ''">
+                AND supplierPhone LIKE "%"#{supplierPhone}"%"
+            </if>
+            <if test="supplierAddress != null and supplierAddress != ''">
+                AND supplierAddress LIKE "%"#{supplierAddress}"%"
+            </if>
+        </where>
+    </select>
+
+    <insert id="saveSupplier" parameterType="Supplier">
+        INSERT INTO supplier VALUES (0, #{supplierName}, #{supplierPhone}, #{supplierAddress});
+    </insert>
+
+    <delete id="removeSupplier" parameterType="Supplier">
+        DELETE FROM supplier WHERE supplierId = #{supplierId}
+    </delete>
+
+    <update id="updateSupplier" parameterType="Supplier">
+        UPDATE supplier
+        <set>
+            <if test="supplierName != null">supplierName = #{supplierName},</if>
+            <if test="supplierPhone != null">supplierPhone = #{supplierPhone},</if>
+            <if test="supplierAddress != null">supplierAddress = #{supplierAddress}</if>
+        </set>
+        WHERE supplierId = #{supplierId}
+    </update>
+</mapper>

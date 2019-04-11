@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.wdu4.invoicing.mapper.EmpMapper" >
+
+    <select id="listEmp" resultType="Emp">
+      SELECT * FROM emp
+      <where>
+          <if test="emp.empId != null">
+              empId LIKE CONCAT('%',#{emp.empId},'%')
+          </if>
+          <if test="emp.empName != null and emp.empName != ''">
+              AND empName LIKE "%"#{emp.empName}"%"
+          </if>
+          <if test="emp.empTelephone != null and emp.empTelephone != ''">
+              AND empTelephone LIKE "%"#{emp.empTelephone}"%"
+          </if>
+          <if test="emp.empNickName != null and emp.empNickName != ''">
+              AND empNickName LIKE "%"#{emp.empNickName}"%"
+          </if>
+          <if test="emp.empNickName != null and emp.empNickName != ''">
+              AND empNickName LIKE "%"#{emp.empNickName}"%"
+          </if>
+          <if test="empIdList != null and empIdList.size() > 0">
+              AND empId NOT IN
+              <foreach collection="empIdList" item="empId" open="(" close=")" separator=",">
+                  ${empId}
+              </foreach>
+          </if>
+      </where>
+      LIMIT #{limit.offset}, #{limit.limit}
+    </select>
+
+    <select id="countEmp" parameterType="Emp" resultType="Integer">
+        SELECT COUNT(empId) FROM emp
+        <where>
+            <if test="emp.empId != null">
+                empId LIKE CONCAT('%',#{emp.empId},'%')
+            </if>
+            <if test="emp.empName != null and emp.empName != ''">
+                AND empName LIKE "%"#{emp.empName}"%"
+            </if>
+            <if test="emp.empTelephone != null and emp.empTelephone != ''">
+                AND empTelephone LIKE "%"#{emp.empTelephone}"%"
+            </if>
+            <if test="emp.empNickName != null and emp.empNickName != ''">
+                AND empNickName LIKE "%"#{emp.empNickName}"%"
+            </if>
+            <if test="empIdList != null and empIdList.size() > 0">
+                AND empId NOT IN
+                <foreach collection="empIdList" item="empId" open="(" close=")" separator=",">
+                    ${empId}
+                </foreach>
+            </if>
+        </where>
+    </select>
+
+    <insert id="saveEmp" parameterType="Emp">
+        INSERT INTO emp VALUES (0, #{empName}, #{empPassword}, #{empTelephone}, #{empNickName}, #{empFaceUrl});
+    </insert>
+
+    <delete id="removeEmp" parameterType="Emp">
+        DELETE FROM emp WHERE empId = #{empId}
+    </delete>
+
+    <update id="updateEmp" parameterType="Emp">
+        UPDATE emp
+        <set>
+            <if test="empName != null">empName = #{empName},</if>
+            <if test="empPassword != null">empPassword = #{empPassword},</if>
+            <if test="empTelephone != null">empTelephone = #{empTelephone},</if>
+            <if test="empNickName != null">empNickName = #{empNickName},</if>
+            <if test="empFaceUrl != null">empFaceUrl = #{empFaceUrl}</if>
+        </set>
+        WHERE empId = #{empId}
+    </update>
+</mapper>
